@@ -31,7 +31,7 @@ type ParsedArticle = {
   comments: number;
 };
 
-const getArticles = (page?: number) => {
+const getArticles = (page: number) => {
   return client.get<Articles>('/api/articles', { params: { page } });
 };
 
@@ -56,10 +56,10 @@ const topArticles = async (limit: number) => {
 
   try {
     let articles: Article[] = [];
-    const { data } = await getArticles();
+    const { data } = await getArticles(1);
     const initialRequest = data;
     articles = articles.concat(initialRequest.data);
-
+    // start at 2 since page 1 has already been fetched
     for (let i = 2; i <= initialRequest.total_pages; i += 1) {
       let newReq = await getArticles(i);
       articles = articles.concat(newReq.data.data);
