@@ -83,6 +83,7 @@ const topArticles = async (limit: number) => {
     //   articles = articles.concat(newRequest.data);
     // }
 
+    // refactor to get all pages at once
     const articles = await fetchAllArtices(initialRequest.total_pages);
 
     const parsedArticles = articles.map<ParsedArticle>(article => ({
