@@ -52,7 +52,7 @@ const sort = (a: ParsedArticle, b: ParsedArticle) => {
 };
 
 const topArticles = async (limit: number) => {
-  if (limit < 0) return [];
+  if (limit <= 0) return [];
 
   try {
     let articles: Article[] = [];
