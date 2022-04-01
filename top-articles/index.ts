@@ -51,20 +51,39 @@ const sort = (a: ParsedArticle, b: ParsedArticle) => {
   return 1;
 };
 
+const fetchAllArtices = async (totalPages: number) => {
+  let articles: Article[] = [];
+  const pages = Array(totalPages).fill(null);
+
+  try {
+    await Promise.all(
+      pages.map(async (_, i) => {
+        const { data } = await getArticles(i + 1);
+        data.data.forEach(a => articles.push(a));
+      })
+    );
+
+    return articles;
+  } catch (error) {
+    throw error;
+  }
+};
+
 const topArticles = async (limit: number) => {
   if (limit <= 0) return [];
 
   try {
-    let articles: Article[] = [];
-    const { data } = await getArticles(1);
-    const initialRequest = data;
-    articles = articles.concat(initialRequest.data);
-    // start at 2 since page 1 has already been fetched
-    for (let i = 2; i <= initialRequest.total_pages; i += 1) {
-      const { data } = await getArticles(i);
-      const newRequest = data.data;
-      articles = articles.concat(newRequest);
-    }
+    const { data: initialRequest } = await getArticles(1);
+    // let articles: Article[] = [];
+
+    // articles = articles.concat(initialRequest.data);
+    // // start at 2 since page 1 has already been fetched
+    // for (let i = 2; i <= initialRequest.total_pages; i += 1) {
+    //   const { data: newRequest } = await getArticles(i);
+    //   articles = articles.concat(newRequest.data);
+    // }
+
+    const articles = await fetchAllArtices(initialRequest.total_pages);
 
     const parsedArticles = articles.map<ParsedArticle>(article => ({
       comments: article.num_comments || 0,
