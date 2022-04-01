@@ -51,8 +51,8 @@ const sort = (a: ParsedArticle, b: ParsedArticle) => {
   return 1;
 };
 
-const fetchAllArtices = async (totalPages: number) => {
-  let articles: Article[] = [];
+const fetchAllArticles = async (totalPages: number) => {
+  const articles: Article[] = [];
   const pages = Array(totalPages).fill(null);
 
   try {
@@ -84,7 +84,7 @@ const topArticles = async (limit: number) => {
     // }
 
     // refactor to get all pages at once
-    const articles = await fetchAllArtices(initialRequest.total_pages);
+    const articles = await fetchAllArticles(initialRequest.total_pages);
 
     const parsedArticles = articles.map<ParsedArticle>(article => ({
       comments: article.num_comments || 0,
