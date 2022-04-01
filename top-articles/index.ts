@@ -61,8 +61,9 @@ const topArticles = async (limit: number) => {
     articles = articles.concat(initialRequest.data);
     // start at 2 since page 1 has already been fetched
     for (let i = 2; i <= initialRequest.total_pages; i += 1) {
-      let newReq = await getArticles(i);
-      articles = articles.concat(newReq.data.data);
+      const { data } = await getArticles(i);
+      const newRequest = data.data;
+      articles = articles.concat(newRequest);
     }
 
     const parsedArticles = articles.map<ParsedArticle>(article => ({
@@ -78,4 +79,4 @@ const topArticles = async (limit: number) => {
   }
 };
 
-topArticles(4).then(console.log);
+topArticles(2).then(console.log);
